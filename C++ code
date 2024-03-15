@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <random>
+
+// O(N^2) - Quadratic time complexity due to nested loops
+void selectionSort(std::vector<int>& numbers) {
+    int n = numbers.size();
+
+    for (int i = 0; i < n - 1; ++i) {
+        int minIndex = i;
+
+        for (int j = i + 1; j < n; ++j) {
+            if (numbers[j] < numbers[minIndex]) {
+                minIndex = j;
+            }
+        }
+
+        std::swap(numbers[i], numbers[minIndex]);
+    }
+}
+
+int main() {
+    // User input for array size, seed number, and range
+    int arraySize, seed, lowRange, highRange;
+
+    std::cout << "How big an array do you want? ";
+    std::cin >> arraySize;
+
+    std::cout << "What is the seed number? ";
+    std::cin >> seed;
+
+    std::cout << "What is the lowest number in the range? ";
+    std::cin >> lowRange;
+
+    std::cout << "What is the highest number in the range? ";
+    std::cin >> highRange;
+
+    // Set seed for random number generation
+    std::mt19937 rng(seed);
+    std::uniform_int_distribution<int> randDist(lowRange, highRange);
+
+    // Generate random numbers and populate the array
+    std::vector<int> numbers(arraySize);
+    for (int& number : numbers) {
+        number = randDist(rng);
+    }
+
+    // Display the original list of numbers (up to 200)
+    std::cout << "Random Set of Numbers: ";
+    for (int i = 0; i < std::min(arraySize, 200); ++i) {
+        std::cout << numbers[i] << " ";
+    }
+    std::cout << "..." << std::endl;
+
+    // Start the timer
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Perform selection sort
+    selectionSort(numbers);
+
+    // Stop the timer
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // Display the sorted list of numbers (up to 200)
+    std::cout << "\nSorted Set of Numbers: ";
+    for (int i = 0; i < std::min(arraySize, 200); ++i) {
+        std::cout << numbers[i] << " ";
+    }
+    std::cout << "..." << std::endl;
+
+    // Calculate the elapsed time
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    // Display the time for the sort
+    std::cout << "\nTime to sort " << arraySize << " numbers = " << duration.count() << " microseconds" << std::endl;
+
+    // Display the time complexity of the sort
+    std::cout << "Time Complexity: O(N^2)" << std::endl;
+
+    return 0;
+}
